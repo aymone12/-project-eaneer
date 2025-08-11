@@ -1,0 +1,46 @@
+.card-spotlight {
+  position: relative;
+  border-radius: 0.5rem; /* match rounded-lg */
+  overflow: hidden;
+  isolation: isolate; /* ensure pseudo-element layers correctly */
+}
+
+.card-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    200px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--spotlight-color, rgba(255,255,255,0.25)),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+  z-index: 1; /* above background, below content */
+}
+
+.card-spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Optional subtle inner border glow on hover */
+.card-spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    240px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(176, 224, 224, 0.15),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  z-index: 1;
+}
+
+.card-spotlight:hover::after {
+  opacity: 1;
+}

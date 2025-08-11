@@ -1,0 +1,105 @@
+.gooey-nav-container {
+  position: relative;
+}
+
+.gooey-nav {
+  --primary-start: #2D5F5F;
+  --primary-end: #4A9B8E;
+  --color-1: #ffffff;
+  --color-2: #b0e0e0;
+  --color-3: rgba(255,255,255,0.8);
+  --color-4: rgba(176,224,224,0.9);
+}
+
+.gooey-nav ul {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.gooey-nav li {
+  position: relative;
+  list-style: none;
+}
+
+.gooey-nav a {
+  position: relative;
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: #B0E0E0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.gooey-nav li.active a,
+.gooey-nav a:hover {
+  background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+  color: white;
+}
+
+.effect.filter,
+.effect.text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Particle system */
+.effect.filter {
+  filter: url('#');
+}
+
+.particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%) scale(var(--scale, 1)) rotate(var(--rotate, 0));
+  animation: particle-move var(--time, 800ms) ease-out forwards;
+}
+
+.particle .point {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--color, #ffffff);
+  opacity: 0.9;
+}
+
+.gooey-nav-container .active .particle {
+  mix-blend-mode: screen;
+}
+
+@keyframes particle-move {
+  from {
+    transform: translate(calc(-50% + var(--start-x, 0)), calc(-50% + var(--start-y, 0))) scale(var(--scale, 1)) rotate(var(--rotate, 0));
+    opacity: 0.8;
+  }
+  to {
+    transform: translate(calc(-50% + var(--end-x, 0)), calc(-50% + var(--end-y, 0))) scale(0.8) rotate(var(--rotate, 0));
+    opacity: 0;
+  }
+}
+
+/* Floating label duplication effect */
+.effect.text {
+  display: grid;
+  place-items: center;
+  color: white;
+  font-weight: 600;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.effect.text.active {
+  opacity: 0.15;
+}
