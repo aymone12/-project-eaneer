@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoEaneer from '../assets/logo-eaneer.png';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hideTimer, setHideTimer] = useState(null);
+  const { isMd } = useBreakpoint();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,6 +50,7 @@ const Navbar = () => {
   }, [lastScrollY, hideTimer]);
 
   return (
+    <>
     <AnimatePresence>
       {isVisible && (
         <motion.nav 
@@ -83,6 +87,7 @@ const Navbar = () => {
         </span>
       </motion.div>
       
+      {/* Desktop links */}
       <div className="hidden md:flex space-x-8">
         {['Home', 'Services', 'About', 'Projects', 'Contact'].map((item) => (
           <motion.a
@@ -98,19 +103,85 @@ const Navbar = () => {
         ))}
       </div>
       
-      <motion.button
-        className="text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300"
-        style={{
-          background: 'linear-gradient(135deg, #2D5F5F 0%, #4A9B8E 100%)'
-        }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        Get Started
-      </motion.button>
+      {/* Actions */}
+      <div className="flex items-center gap-3">
+        {/* CTA on md+ */}
+        <motion.a
+          href="#contact"
+          className="hidden md:inline-block text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+          style={{
+            background: 'linear-gradient(135deg, #2D5F5F 0%, #4A9B8E 100%)'
+          }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Get Started
+        </motion.a>
+
+        {/* Mobile menu button on < md */}
+        <button
+          type="button"
+          aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
+          className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+          style={{ color: '#B0E0E0', backgroundColor: 'rgba(8, 21, 29, 0.2)', border: '1px solid rgba(8, 21, 29, 0.3)' }}
+          onClick={() => setMobileOpen((v) => !v)}
+        >
+          <span className="sr-only">Open main menu</span>
+          {/* Simple hamburger */}
+          <div className="space-y-1.5">
+            <span className="block w-6 h-0.5" style={{ backgroundColor: '#B0E0E0' }} />
+            <span className="block w-6 h-0.5" style={{ backgroundColor: '#B0E0E0' }} />
+            <span className="block w-6 h-0.5" style={{ backgroundColor: '#B0E0E0' }} />
+          </div>
+        </button>
+      </div>
         </motion.nav>
       )}
     </AnimatePresence>
+    {/* Mobile menu dropdown */}
+    {(!isMd) && (
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-16 left-0 right-0 z-40 md:hidden px-4"
+          >
+            <div
+              className="rounded-lg shadow-lg divide-y"
+              style={{ backgroundColor: '#0F0F23', border: '1px solid rgba(8, 21, 29, 0.3)' }}
+            >
+              {['Home', 'Services', 'About', 'Projects', 'Contact'].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-6 py-4"
+                  style={{ color: '#B0E0E0' }}
+                >
+                  {item}
+                </a>
+              ))}
+              <div className="px-6 py-4">
+                <a
+                  href="#contact"
+                  className="w-full inline-flex justify-center text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+                  style={{ background: 'linear-gradient(135deg, #2D5F5F 0%, #4A9B8E 100%)' }}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Get Started
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    )}
+    </>
   );
 };
 
